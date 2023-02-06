@@ -81,7 +81,37 @@ void loop()
   Serial.print(active_power);
   Serial.print("\t");
   Serial.print(accumulated_energy);
-  Serial.println("\t");
+  Serial.print("\t\t");
+
+  //----------------------- imprimo la segunda trama -----------------------
+  Serial.print("s\t");
+  Serial.print(RMS_VOLTAGE);
+  Serial.print("\t");
+  Serial.print(RMS_CURRENT);
+  Serial.print("\t");
+  Serial.print(max_sample);
+  Serial.print("\t");
+  Serial.print(max_current_ever);
+  Serial.print("\t");
+  percentage = 15;
+  for (int i = 0; i < 7; i++)
+  {
+    harmonic_current[i] = RMS_CURRENT * (percentage / 100.0);
+    Serial.print(harmonic_current[i]);
+    Serial.print("\t");
+    percentage -= 1.5;
+  }
+  thd = 0;
+  if (RMS_CURRENT > 0)
+  {
+    thd = sqrt(pow(harmonic_current[1], 2) + pow(harmonic_current[2], 2) + pow(harmonic_current[3], 2) + pow(harmonic_current[4], 2) + pow(harmonic_current[5], 2) + pow(harmonic_current[6], 2)) / RMS_CURRENT;
+    thd = thd;
+  }
+  Serial.print(thd);
+  Serial.print("\t");
+  Serial.print(active_power);
+  Serial.print("\t");
+  Serial.println(accumulated_energy);
 
   previous_time = current_time;
   while (millis() - timer < DELAY_MS)
